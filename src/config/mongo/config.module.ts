@@ -1,7 +1,22 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from './config.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { object, string } from 'joi';
+
+import configuration from './configuration';
+import { MongoConfigService } from './config.service';
 
 @Module({
-  providers: [ConfigService]
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      expandVariables: true,
+      validationSchema: object({
+        MONGO_URI: string(),
+      }),
+    }),
+  ],
+  providers: [ConfigService, MongoConfigService],
+  exports: [ConfigService, MongoConfigService],
 })
-export class ConfigModule {}
+export class MongoConfigModule {}
