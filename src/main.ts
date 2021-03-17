@@ -3,7 +3,7 @@ import { Logger } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
-import { AppConfigService } from './config/app/config.service';
+import { AppConfigService } from './settings/app/config.service';
 
 const logger = new Logger('Main');
 

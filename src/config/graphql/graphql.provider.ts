@@ -2,8 +2,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { join } from 'path';
 
-import { ApiConfigModule } from '../config/api/config.module';
-import { ApiConfigService } from '../config/api/config.service';
+import { ApiConfigModule } from '../../settings/api/config.module';
+import { ApiConfigService } from '../../settings/api/config.service';
 //import { UserModule } from '../modules/user/user.module';
 
 export const gqlProvider = [

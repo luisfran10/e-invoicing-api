@@ -6,20 +6,36 @@ import {
   Logger,
   HttpStatus,
 } from '@nestjs/common';
+import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
 
 @Catch(HttpException)
-export class HttpExceptionFilter<T> implements ExceptionFilter {
+export class HttpExceptionFilter implements GqlExceptionFilter {
+  /**
+    getRoot<T = any>(): T; //parent
+    getArgs<T = any>(): T;
+    getContext<T = any>(): T;
+    getInfo<T = any>(): T;
+   */
   catch(exception: HttpException, host: ArgumentsHost) {
-    const context = host.switchToHttp();
-    const request = context.getRequest();
+    const gqlHost = GqlArgumentsHost.create(host);
+
+    Logger.error(gqlHost.getInfo, 'ExceptionFilter');
+
+    return exception;
+    /** 
+    const request = gqlHost.getRequest();
     const response = context.getResponse();
     const status = exception.getStatus
       ? exception.getStatus()
       : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const errorResponse = {
-      code: status,
-      timeStamp: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`,
+      code: status,Logger.error(
+      `${request.method} ${request.url}`,
+      JSON.stringify(errorResponse),
+      'ExceptionFilter',
+    );
+      timeStamp: ${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}, //it use back ticks
       path: request.url,
       method: request.method,
       message:
@@ -37,5 +53,6 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
     );
 
     response.status(status).json(errorResponse);
+    */
   }
 }

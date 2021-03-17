@@ -10,10 +10,10 @@ import { HttpRegisterInterceptor } from './http-register.interceptor';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    {
+    /*{
       provide: APP_INTERCEPTOR,
       useClass: HttpRegisterInterceptor,
-    },
+    },*/
   ],
 })
 export class CommonModule {}
