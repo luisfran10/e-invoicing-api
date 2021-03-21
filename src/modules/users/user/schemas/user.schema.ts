@@ -1,72 +1,88 @@
-import { Schema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+import { Document } from 'mongoose';
 
 import {
   EMAIL_PATTERN,
-  PHONE_NUMBER_PATTERN,
   NAME_MIN_LENGHT,
   NAME_MAX_LENGHT,
-  PHONE_LENGHT,
   PASSWORD_PATTERN,
   PASSWORD_MIN_LENGHT,
   PASSWORD_MAX_LENGHT,
-} from './user.constant';
-import { UserRole } from './user-role.enum';
-import { ValidationMessage } from '../../shared/schema-validation.message';
+  DEFAULT_ROLE,
+} from '../constants/user-schema.constant';
+import {
+  NAME_ALIAS,
+  EMAIL_ALIAS,
+  PASSWORD_ALIAS,
+  ROLE_ALIAS,
+} from '../constants/user-alias.constant';
+import { MessageHandler } from '../../../../shared/helpers';
+
+export type UserDocument = User & Document;
 
 const emailValidator = (email: string): boolean => EMAIL_PATTERN.test(email);
-
-const phoneValidator = (phone: string): boolean =>
-  PHONE_NUMBER_PATTERN.test(phone);
 
 const passwordValidator = (password: string): boolean =>
   PASSWORD_PATTERN.test(password);
 
-export const UserSchema = new Schema(
-  {
-    name: {
-      type: String,
-      required: [true, ValidationMessage.requiredMessage('name')],
-      lowercase: true,
-      minlenght: [
-        NAME_MIN_LENGHT,
-        ValidationMessage.minLenghtMesage('name', NAME_MIN_LENGHT),
-      ],
-      maxlenght: [
-        NAME_MAX_LENGHT,
-        ValidationMessage.maxLenghtMesage('name', NAME_MAX_LENGHT),
-      ],
+@Schema({ timestamps: true })
+export class User {
+  @Prop({
+    type: String,
+    required: [true, MessageHandler.requiredField('user_name')],
+    lowercase: true,
+    minlenght: [
+      NAME_MIN_LENGHT,
+      MessageHandler.minLenght(NAME_ALIAS, NAME_MIN_LENGHT),
+    ],
+    maxlenght: [
+      NAME_MAX_LENGHT,
+      MessageHandler.maxLenght(NAME_ALIAS, NAME_MAX_LENGHT),
+    ],
+    alias: NAME_ALIAS,
+  })
+  name: string;
+
+  @Prop({
+    type: String,
+    required: [true, MessageHandler.requiredField(EMAIL_ALIAS)],
+    unique: true,
+    lowercase: true,
+    validate: {
+      validator: emailValidator,
+      message: props => MessageHandler.inputPattern(props.value),
     },
-    email: {
-      type: String,
-      required: [true, ValidationMessage.requiredMessage('user-email')],
-      unique: [true, ValidationMessage.uniqueMessage('user-email')],
-      lowercase: true,
-      validate: [
-        emailValidator,
-        ValidationMessage.patternMessage('user-email'),
-      ],
-      alias: 'user_email',
+    alias: EMAIL_ALIAS,
+  })
+  email: string;
+
+  @Prop({
+    type: String,
+    required: [true, MessageHandler.requiredField(PASSWORD_ALIAS)],
+    validate: {
+      validator: passwordValidator,
+      message: props => MessageHandler.inputPattern(props.value),
     },
-    password: {
-      type: String,
-      required: [true, ValidationMessage.requiredMessage('user-password')],
-      validate: [passwordValidator, ValidationMessage.patternMessage('')],
-      minlenght: [
-        PASSWORD_MIN_LENGHT,
-        ValidationMessage.minLenghtMesage('user-password', PASSWORD_MIN_LENGHT),
-      ],
-      maxlenght: [
-        PASSWORD_MAX_LENGHT,
-        ValidationMessage.maxLenghtMesage('user-password', PASSWORD_MAX_LENGHT),
-      ],
-      alias: 'user_password',
-    },
-    role: {
-      type: String,
-      default: UserRole.DEFAULT,
-      enum: Object.values(UserRole),
-      alias: 'user_role',
-    },
-  },
-  { timestamps: true },
-);
+    minlenght: [
+      PASSWORD_MIN_LENGHT,
+      MessageHandler.minLenght(PASSWORD_ALIAS, PASSWORD_MIN_LENGHT),
+    ],
+    maxlenght: [
+      PASSWORD_MAX_LENGHT,
+      MessageHandler.maxLenght(PASSWORD_ALIAS, PASSWORD_MAX_LENGHT),
+    ],
+    alias: PASSWORD_ALIAS,
+  })
+  password: string;
+
+  @Prop({
+    type: String,
+    default: DEFAULT_ROLE,
+    alias: ROLE_ALIAS,
+    //enum: Object.values(UserRole),
+  })
+  role: String;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
