@@ -30,7 +30,7 @@ const passwordValidator = (password: string): boolean =>
 export class User {
   @Prop({
     type: String,
-    required: [true, MessageHandler.requiredField('user_name')],
+    required: [true, MessageHandler.requiredField(NAME_ALIAS)],
     lowercase: true,
     minlenght: [
       NAME_MIN_LENGHT,
@@ -40,7 +40,7 @@ export class User {
       NAME_MAX_LENGHT,
       MessageHandler.maxLenght(NAME_ALIAS, NAME_MAX_LENGHT),
     ],
-    alias: NAME_ALIAS,
+    //alias: NAME_ALIAS,
   })
   name: string;
 
@@ -53,7 +53,7 @@ export class User {
       validator: emailValidator,
       message: props => MessageHandler.inputPattern(props.value),
     },
-    alias: EMAIL_ALIAS,
+    //alias: EMAIL_ALIAS,
   })
   email: string;
 
@@ -72,14 +72,14 @@ export class User {
       PASSWORD_MAX_LENGHT,
       MessageHandler.maxLenght(PASSWORD_ALIAS, PASSWORD_MAX_LENGHT),
     ],
-    alias: PASSWORD_ALIAS,
+    //alias: PASSWORD_ALIAS,
   })
   password: string;
 
   @Prop({
     type: String,
     default: DEFAULT_ROLE,
-    alias: ROLE_ALIAS,
+    //alias: ROLE_ALIAS,
     //enum: Object.values(UserRole),
   })
   role: String;

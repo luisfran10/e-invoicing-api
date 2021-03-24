@@ -3,19 +3,19 @@ import { Field, ID, GraphQLISODateTime, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class User {
   @Field(type => ID)
-  user_name: string;
+  name: string;
 
   @Field(type => String)
-  user_email: string;
+  email: string;
 
   @Field(type => String)
-  user_password: string;
+  password: string;
 
   @Field(type => String, {
     nullable: true,
     description: 'Role contains the user permissions',
   })
-  user_role: string;
+  role: string;
 
   @Field(type => GraphQLISODateTime, { nullable: true })
   created_at: Date;
