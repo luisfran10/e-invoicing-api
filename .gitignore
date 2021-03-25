@@ -26,10 +26,14 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
-.vscode/
+### VisualStudioCode ###
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 #config files
-test/
 .env
 src/schema.gql
