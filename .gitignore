@@ -35,7 +35,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 #config files
-test/
-.vscode/
+test/*
 .env
-*.gql
+.src/schema.gql
